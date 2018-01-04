@@ -1,5 +1,6 @@
 #ifndef _PROC_H_
 #define _PROC_H_
+#include "ProcessInfo.h"
 // Segments in proc->gdt.
 // Also known to bootasm.S and trapasm.S
 #define SEG_KCODE 1  // kernel code
@@ -56,8 +57,6 @@ struct context {
   uint ebp;
   uint eip;
 };
-
-enum procstate { UNUSED, EMBRYO, SLEEPING, RUNNABLE, RUNNING, ZOMBIE };
 
 // Per-process state
 struct proc {

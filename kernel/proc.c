@@ -5,6 +5,7 @@
 #include "x86.h"
 #include "proc.h"
 #include "spinlock.h"
+#include "ProcessInfo.h"
 
 struct {
   struct spinlock lock;
@@ -443,4 +444,26 @@ procdump(void)
   }
 }
 
-
+// @param processInfo array is preallocated, with size NPROC
+// @return the number of ProcessInfo structs stored in the return buffer
+int
+get_procinfo(struct ProcessInfo processInfo[]) {
+  // loop through all the processes and copy their information
+  acquire(&ptable.lock);
+  int procs_found = 0;
+  struct proc* p;
+  for(p = ptable.proc; p < ptable.proc+NPROC; p++) {
+    if(p->state != UNUSED) {
+      struct ProcessInfo* pinfo = processInfo + procs_found;
+      pinfo->pid = p->pid;
+      pinfo->ppid = p->parent? p->parent->pid : -1; // -1 means no parent
+      pinfo->state = p->state;
+      pinfo->sz = p->sz;
+      // copy the process name string
+      strncpy(pinfo->name, p->name, 16);
+      procs_found++;
+    }
+  }
+  release(&ptable.lock);
+  return procs_found;
+}

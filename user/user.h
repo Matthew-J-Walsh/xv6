@@ -1,5 +1,6 @@
 #ifndef _USER_H_
 #define _USER_H_
+#include "ProcessInfo.h"
 
 struct stat;
 
@@ -25,6 +26,9 @@ int getpid(void);
 char* sbrk(int);
 int sleep(int);
 int uptime(void);
+// ProcessInfo[] should be a preallocated array of size NPROC.
+// It is created by the user program and filled-in by the kernel.
+int getprocs(struct ProcessInfo[]);
 
 // user library functions (ulib.c)
 int stat(char*, struct stat*);

@@ -88,3 +88,17 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+int
+sys_getprocs(void)
+{
+  // get the return value pointer.
+  // Note that pi is a pre-allocated array of size NPROC
+  struct ProcessInfo *pi;
+  if (argptr(0, (char**)&pi, sizeof(pi)) < 0) {
+    return -1;
+  }
+
+  return get_procinfo(pi);
+}
+
